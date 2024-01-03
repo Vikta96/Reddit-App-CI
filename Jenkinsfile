@@ -20,7 +20,7 @@ pipeline {
         }
         stage("Sonarqube Analysis") {
             steps {
-                withSonarQubeEnv(credentialsId: 'sonar-token') {
+                withSonarQubeEnv('sonar-token') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-app \
                     -Dsonar.projectKey=reddit-app'''
                 }
@@ -55,19 +55,21 @@ pipeline {
         }
 	    stage("Trivy Image Scan") {
             steps {
-                sh "trivy image vikta96/reddit-app-ci:latest > trivyimage.txt" 
+                script {
+                    sh "trivy image vikta96/reddit-app-ci:latest > trivyimage.txt" 
+                }            
             }
         }
-        post {
-        always {
-            emailext attachLog: true,
-                subject: "'${currentBuild.result}'",
-                body: "Project: ${env.JOB_NAME}<br/>" +
-                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
-                    "URL: ${env.BUILD_URL}<br/>",
-                to: 'anandbm1995@gmail.com',                              
-                attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
-            }
+    }
+    post {
+    always {
+        emailext attachLog: true,
+            subject: "'${currentBuild.result}'",
+            body: "Project: ${env.JOB_NAME}<br/>" +
+                "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                "URL: ${env.BUILD_URL}<br/>",
+            to: 'anandbm1995@gmail.com',                              
+            attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
         }
     }
 }	
