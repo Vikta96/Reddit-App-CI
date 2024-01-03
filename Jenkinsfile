@@ -5,7 +5,7 @@ pipeline {
         nodejs 'reddit-nodejs'
     }
     environment {
-        SCANNER_HOME = tool 'reddit-sonar'
+        SCANNER_HOME = tool 'SonarQubeScanner'
     }
     stages {
         stage('clean workspace') {
@@ -20,7 +20,7 @@ pipeline {
         }
         stage("sonar-token") {
             steps {
-                withSonarQubeEnv('reddit-sonar') {
+                withSonarQubeEnv('SonarQubeScanner') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-sonar-project \
                     -Dsonar.projectKey=reddit-sonar-project'''
                 }
