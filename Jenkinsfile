@@ -43,21 +43,19 @@ pipeline {
                 sh "trivy fs . > trivyfs.txt"
              }
          }
-	    stage("Build & Push Docker Image") {
+	stage("Build & Push Docker Image") {
             steps {
                 script {
-		            withDockerRegistry(credentialsId: 'dockerhub-credentials', toolName: 'Docker')
-			            sh "docker build -t reddit-app-ci ."
-                        sh "docker tag reddit-app-ci vikta96/reddit-app-ci:latest "
-                        sh "docker push vikta96/reddit-app-ci:latest
-                    }
+		     withDockerRegistry(credentialsId: 'dockerhub-credentials', toolName: 'Docker')
+			 sh "docker build -t reddit-app-ci ."
+                         sh "docker tag reddit-app-ci vikta96/reddit-app-ci:latest "
+                         sh "docker push vikta96/reddit-app-ci:latest"
                 }
             }
         }
-	    stage("Trivy Image Scan") {
+	stage("Trivy Image Scan") {
             steps {
                 sh "trivy image vikta96/reddit-app-ci:latest > trivyimage.txt" 
-                }
             }
         }
         post {
@@ -72,4 +70,4 @@ pipeline {
             }
         }
     }
-}
+}	
