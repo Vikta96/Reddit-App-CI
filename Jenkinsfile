@@ -49,7 +49,7 @@ pipeline {
 		     withDockerRegistry(credentialsId: 'dockerhub-credentials', toolName: 'Docker')
 			 sh "docker build -t reddit-app-ci ."
                          sh "docker tag reddit-app-ci vikta96/reddit-app-ci:latest "
-                         sh "docker push vikta96/reddit-app-ci:latest
+                         sh "docker push vikta96/reddit-app-ci:latest"
                 }
             }
         }
