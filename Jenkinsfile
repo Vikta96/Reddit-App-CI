@@ -25,6 +25,13 @@ pipeline {
                     -Dsonar.projectKey=reddit-sonar-project'''
                 }
             }
-        }     
+        } 
+        stage("Quality Gate") {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'reddit sonar-token'
+                }
+            }
+        }        
     }
 }	
