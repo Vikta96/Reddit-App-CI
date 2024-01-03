@@ -32,44 +32,6 @@ pipeline {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-scanner'
                 }
             }
-        }
-        stage('Install Dependencies') {
-            steps {
-                sh "npm install"
-            }
-        }
-        stage('TRIVY FS SCAN') {
-            steps {
-                sh "trivy fs . > trivyfs.txt"
-             }
-         }
-	    stage("Build & Push Docker Image") {
-            steps {
-                script {
-		            withDockerRegistry(credentialsId: 'dockerhub-credentials', toolName: 'Docker')
-			            sh "docker build -t reddit-app-ci ."
-                        sh "docker tag reddit-app-ci vikta96/reddit-app-ci:latest "
-                        sh "docker push vikta96/reddit-app-ci:latest"
-                }
-            }
-        }
-	    stage("Trivy Image Scan") {
-            steps {
-                script {
-                    sh "trivy image vikta96/reddit-app-ci:latest > trivyimage.txt" 
-                }            
-            }
-        }
-    }
-    post {
-    always {
-        emailext attachLog: true,
-            subject: "'${currentBuild.result}'",
-            body: "Project: ${env.JOB_NAME}<br/>" +
-                "Build Number: ${env.BUILD_NUMBER}<br/>" +
-                "URL: ${env.BUILD_URL}<br/>",
-            to: 'anandbm1995@gmail.com',                              
-            attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
-        }
+        }      
     }
 }	
