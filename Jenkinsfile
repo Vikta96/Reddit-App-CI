@@ -20,16 +20,16 @@ pipeline {
         }
         stage("sonar-token") {
             steps {
-                withSonarQubeEnv('sonar-token') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-app \
-                    -Dsonar.projectKey=reddit-app'''
+                withSonarQubeEnv('sonar-scanner') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-clone-app \
+                    -Dsonar.projectKey=reddit-clone-app'''
                 }
             }
         }
         stage("Quality Gate") {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-scanner'
                 }
             }
         }
