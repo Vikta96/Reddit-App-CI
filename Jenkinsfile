@@ -18,7 +18,7 @@ pipeline {
                 git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/Vikta96/Reddit-App-CI.git'
             }
         }
-        stage("Sonarqube Analysis") {
+        stage("sonar-token") {
             steps {
                 withSonarQubeEnv('sonar-token') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-app \
