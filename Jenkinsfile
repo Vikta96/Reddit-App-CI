@@ -60,8 +60,14 @@ pipeline {
                     sh "trivy image vikta96/reddit-app-ci:latest > trivyimage.txt" 
                 }
             }
-        }       
-    
+        }
+        stage ('Cleanup Artifacts') {
+            steps {
+                script {
+                      sh "docker rmi reddit-app-ci:latest"
+                }
+            }
+        }         
     }
     post {
         always {
