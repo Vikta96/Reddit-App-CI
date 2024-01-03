@@ -68,17 +68,22 @@ pipeline {
                 }
             }
         }         
-    }
-    post {
-        always {
-           emailext attachLog: true,
-               subject: "'${currentBuild.result}'",
-               body: "Project: ${env.JOB_NAME}<br/>" +
-                   "Build Number: ${env.BUILD_NUMBER}<br/>" +
-                   "URL: ${env.BUILD_URL}<br/>",
-               to: 'anandbm1995@gmail.com',                              
-               attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
+        stage('Send Email with Trivy Reports') {
+            steps {
+                script {
+                    def trivyFsReport = readFile('trivyfs.txt')
+                    def trivyImageReport = readFile('trivyimage.txt')
+
+                    emailext subject: 'Trivy Scan Reports',
+                            body: "Trivy FS Scan:\n${trivyFsReport}\n\nTrivy Image Scan:\n${trivyImageReport}",
+                            to: 'anandbm1995@gmail.com',
+                            attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
+                }
+            }
         }
-     }
-    
+    }
 }
+    
+
+
+    
