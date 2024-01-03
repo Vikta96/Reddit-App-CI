@@ -1,11 +1,11 @@
 pipeline {
     agent any
     tools {
-        jdk 'jdk-17'
-        nodejs 'Nodejs-16'
+        jdk 'reddit-jdk'
+        nodejs 'reddit-nodejs'
     }
     environment {
-        SCANNER_HOME = tool 'sonar-scanner'
+        SCANNER_HOME = tool 'reddit-sonar'
     }
     stages {
         stage('clean workspace') {
@@ -20,18 +20,11 @@ pipeline {
         }
         stage("sonar-token") {
             steps {
-                withSonarQubeEnv('sonar-scanner') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-clone-app \
-                    -Dsonar.projectKey=reddit-clone-app'''
+                withSonarQubeEnv('reddit-sonar') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-sonar-project \
+                    -Dsonar.projectKey=reddit-sonar-project'''
                 }
             }
-        }
-        stage("Quality Gate") {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-scanner'
-                }
-            }
-        }      
+        }     
     }
 }	
