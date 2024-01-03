@@ -32,6 +32,36 @@ pipeline {
                     waitForQualityGate abortPipeline: false, credentialsId: 'reddit sonar-token'
                 }
             }
-        }        
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'dockerhub-credentials', toolName: 'reddit-docker') {   
+                        sh "docker build -t reddit-app-ci ."
+                        sh "docker tag reddit-app-ci vikta96/reddit-app-ci "
+                        sh "docker push vikta96/reddit-app-ci:latest "
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                script {
+                    sh "trivy image sevenajay/tetrisv1:latest > trivyimage.txt" 
+                }
+            }
+        }       
+    
     }
+
 }	
