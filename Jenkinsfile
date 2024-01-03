@@ -57,7 +57,7 @@ pipeline {
         stage("TRIVY"){
             steps{
                 script {
-                    sh "trivy image sevenajay/tetrisv1:latest > trivyimage.txt" 
+                    sh "trivy image vikta96/reddit-app-ci:latest > trivyimage.txt" 
                 }
             }
         }       
