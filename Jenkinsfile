@@ -20,7 +20,7 @@ pipeline {
         }
         stage("sonar-token") {
             steps {
-                withSonarQubeEnv('reddit-sonar-token') {
+                withSonarQubeEnv('SonarQube Scanner') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-app-ci \
                     -Dsonar.projectKey=reddit-app-ci'''
                 }
