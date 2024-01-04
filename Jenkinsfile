@@ -5,7 +5,7 @@ pipeline {
         nodejs 'reddit-nodejs'
     }
     environment {
-        SCANNER_HOME = tool 'SonarQubeScanner'
+        SCANNER_HOME = tool 'SonarQube Scanner'
     }
     stages {
         stage('clean workspace') {
@@ -15,14 +15,14 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/Vikta96/Reddit-App-CI.git'
+                git branch: 'main', credentialsId: 'github credentials', url: 'https://github.com/Vikta96/Reddit-App-CI.git'
             }
         }
         stage("sonar-token") {
             steps {
-                withSonarQubeEnv('SonarQubeScanner') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-sonar-project \
-                    -Dsonar.projectKey=reddit-sonar-project'''
+                withSonarQubeEnv('reddit-sonar-token') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reddit-app-ci \
+                    -Dsonar.projectKey=reddit-app-ci'''
                 }
             }
         } 
